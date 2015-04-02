@@ -1,0 +1,24 @@
+<monitor>
+    <name>HornetQMonitor</name>
+    <type>managed</type>
+    <description>HornetQ monitor</description>
+    <monitor-configuration></monitor-configuration>
+    <enabled>true</enabled>
+    <monitor-run-task>
+        <execution-style>periodic</execution-style>
+        <execution-frequency-in-seconds>60</execution-frequency-in-seconds>
+        <name>HornetQ Monitor Run Task</name>
+        <display-name>HornetQ Monitor Task</display-name>
+        <description>HornetQ Monitor Task</description>
+        <type>java</type>
+        <execution-timeout-in-secs>60</execution-timeout-in-secs>
+        <task-arguments>
+            <!-- config file-->
+            <argument name="config-file" is-required="true" default-value="monitors/HornetQMonitor/config.yml"/>
+        </task-arguments>
+        <java-task>
+            <classpath>hornetq-monitoring-extension.jar</classpath>
+            <impl-class>com.appdynamics.extensions.hornetq.HornetQMonitor</impl-class>
+        </java-task>
+    </monitor-run-task>
+</monitor>
