@@ -6,16 +6,9 @@ servers:
     password: ""
     displayName: "localhost"
 
-# hornetq mbeans. Exclude patterns with regex can be used to exclude any unwanted metrics.
-mbeans:
-  - domainName: "org.hornetq"
-    excludePatterns: [
-     "Acceptor|.*",
-     "Address|.*",
-     "ConnectionFactory|.*",
-     "Server|.*",
-     "Topic|.*"
-    ]
+# hornetq mbean domain name
+mbeanDomainName: "org.hornetq"
+
 
 # number of concurrent tasks
 numberOfThreads: 10
@@ -27,4 +20,14 @@ threadTimeout: 30
 metricPathPrefix:  "Custom Metrics|HornetQ|"
 
 #Metric Overrides. Change this if you want to transform the metric key or value or its properties.
-#metricOverrides:
+metricOverrides:
+ - metricKey: "Acceptor.*"
+   disabled: true
+ - metricKey: "Address.*"
+   disabled: true
+ - metricKey: "ConnectionFactory.*"
+   disabled: true
+ - metricKey: "Server.*"
+   disabled: true
+ - metricKey: "Topic.*"
+   disabled: true

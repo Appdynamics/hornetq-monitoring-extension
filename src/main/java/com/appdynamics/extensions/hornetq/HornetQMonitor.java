@@ -43,9 +43,8 @@ public class HornetQMonitor extends AManagedMonitor {
     public static final Logger logger = Logger.getLogger(HornetQMonitor.class);
     public static final String CONFIG_ARG = "config-file";
     public static final String METRIC_SEPARATOR = "|";
-    private static final int DEFAULT_NUMBER_OF_THREADS = 10;
     public static final int DEFAULT_THREAD_TIMEOUT = 10;
-
+    private static final int DEFAULT_NUMBER_OF_THREADS = 10;
     private ExecutorService threadPool;
 
     public HornetQMonitor() {
@@ -53,6 +52,10 @@ public class HornetQMonitor extends AManagedMonitor {
         logger.info(msg);
         System.out.println(msg);
 
+    }
+
+    public static String getImplementationVersion() {
+        return HornetQMonitor.class.getPackage().getImplementationTitle();
     }
 
     public TaskOutput execute(Map<String, String> taskArgs, TaskExecutionContext taskExecutionContext) throws TaskExecutionException {
@@ -103,7 +106,6 @@ public class HornetQMonitor extends AManagedMonitor {
         return config.getMetricPathPrefix() + cMetric.getDisplayName() + METRIC_SEPARATOR;
     }
 
-
     /**
      * Creates concurrent tasks
      *
@@ -114,13 +116,12 @@ public class HornetQMonitor extends AManagedMonitor {
         List<Future<HornetQMetrics>> parallelTasks = new ArrayList<Future<HornetQMetrics>>();
         if (config != null && config.getServers() != null) {
             for (Server server : config.getServers()) {
-                HornetQMonitorTask hornetQMonitorTask = new HornetQMonitorTask(server, config.getMbeans());
+                HornetQMonitorTask hornetQMonitorTask = new HornetQMonitorTask(server, config.getMbeanDomainName());
                 parallelTasks.add(getThreadPool().submit(hornetQMonitorTask));
             }
         }
         return parallelTasks;
     }
-
 
     /**
      * Collects the result from the thread.
@@ -145,7 +146,6 @@ public class HornetQMonitor extends AManagedMonitor {
         }
         return allMetrics;
     }
-
 
     /**
      * A helper method to report the metrics.
@@ -196,11 +196,6 @@ public class HornetQMonitor extends AManagedMonitor {
             configFileName = jarPath + File.separator + filename;
         }
         return configFileName;
-    }
-
-
-    public static String getImplementationVersion() {
-        return HornetQMonitor.class.getPackage().getImplementationTitle();
     }
 
 }

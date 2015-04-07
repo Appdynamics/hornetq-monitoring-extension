@@ -17,7 +17,6 @@ package com.appdynamics.extensions.hornetq;
 
 
 import com.appdynamics.extensions.hornetq.config.HornetQMBeanKeyPropertyEnum;
-import com.appdynamics.extensions.hornetq.config.MBeanData;
 import com.appdynamics.extensions.hornetq.config.Server;
 import com.appdynamics.extensions.jmx.JMXConnectionConfig;
 import com.appdynamics.extensions.jmx.JMXConnectionUtil;
@@ -36,27 +35,15 @@ import java.util.concurrent.Callable;
 public class HornetQMonitorTask implements Callable<HornetQMetrics> {
 
     public static final String METRICS_SEPARATOR = "|";
-    private Server server;
-    private MBeanData[] mbeansData;
-    private Map<String, MBeanData> mbeanLookup;
-    private JMXConnectionUtil jmxConnector;
     public static final Logger logger = Logger.getLogger(HornetQMonitorTask.class);
+    private Server server;
+    private String mbeanDomainName;
+    private JMXConnectionUtil jmxConnector;
 
-    public HornetQMonitorTask(Server server, MBeanData[] mbeansData) {
+    public HornetQMonitorTask(Server server, String mbeanDomainName) {
         this.server = server;
-        this.mbeansData = mbeansData;
-        createMBeansLookup(mbeansData);
+        this.mbeanDomainName = mbeanDomainName;
     }
-
-    private void createMBeansLookup(MBeanData[] mbeansData) {
-        mbeanLookup = new HashMap<String, MBeanData>();
-        if (mbeansData != null) {
-            for (MBeanData mBeanData : mbeansData) {
-                mbeanLookup.put(mBeanData.getDomainName(), mBeanData);
-            }
-        }
-    }
-
 
     /**
      * Connects to a remote/local JMX server, applies exclusion filters and collects the metrics
@@ -73,7 +60,7 @@ public class HornetQMonitorTask implements Callable<HornetQMetrics> {
             if (connector != null) {
                 Set<ObjectInstance> allMbeans = jmxConnector.getAllMBeans();
                 if (allMbeans != null) {
-                    Map<String, Object> filteredMetrics = applyExcludePatternsAndExtractMetrics(allMbeans);
+                    Map<String, Object> filteredMetrics = gatherMetrics(allMbeans);
                     filteredMetrics.put(HornetQMonitorConstants.METRICS_COLLECTION_SUCCESSFUL, HornetQMonitorConstants.SUCCESS_VALUE);
                     hornetQMetrics.setMetrics(filteredMetrics);
                 }
@@ -87,14 +74,12 @@ public class HornetQMonitorTask implements Callable<HornetQMetrics> {
         return hornetQMetrics;
     }
 
-    private Map<String, Object> applyExcludePatternsAndExtractMetrics(Set<ObjectInstance> allMbeans) {
-        Map<String, Object> filteredMetrics = new HashMap<String, Object>();
+    private Map<String, Object> gatherMetrics(Set<ObjectInstance> allMbeans) {
+        Map<String, Object> allMetrics = new HashMap<String, Object>();
         for (ObjectInstance mbean : allMbeans) {
             ObjectName objectName = mbean.getObjectName();
             //consider only the the metric domains (org.hornetq) mentioned in the config
             if (isDomainConfigured(objectName)) {
-                MBeanData mBeanData = mbeanLookup.get(objectName.getDomain());
-                Set<String> excludePatterns = mBeanData.getExcludePatterns();
                 MBeanAttributeInfo[] attributes = jmxConnector.fetchAllAttributesForMbean(objectName);
                 if (attributes != null) {
                     for (MBeanAttributeInfo attr : attributes) {
@@ -105,16 +90,7 @@ public class HornetQMonitorTask implements Callable<HornetQMetrics> {
                                 //AppDynamics only considers number values
                                 if (attribute != null && attribute instanceof Number) {
                                     String metricKey = getMetricsKey(objectName, attr);
-                                    if (!isKeyExcluded(metricKey, excludePatterns)) {
-                                        if (logger.isDebugEnabled()) {
-                                            logger.debug("Metric key:value before ceiling = " + metricKey + ":" + String.valueOf(attribute));
-                                        }
-                                        filteredMetrics.put(metricKey, attribute);
-                                    } else {
-                                        if (logger.isDebugEnabled()) {
-                                            logger.debug(metricKey + " is excluded");
-                                        }
-                                    }
+                                    allMetrics.put(metricKey, attribute);
                                 }
                             }
                         } catch (Exception e) {
@@ -125,22 +101,8 @@ public class HornetQMonitorTask implements Callable<HornetQMetrics> {
             }
 
         }
-        return filteredMetrics;
+        return allMetrics;
     }
-
-    private boolean isKeyExcluded(String metricKey, Set<String> excludePatterns) {
-        for (String excludePattern : excludePatterns) {
-            if (metricKey.matches(escapeText(excludePattern))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private String escapeText(String excludePattern) {
-        return excludePattern.replaceAll("\\|", "\\\\|");
-    }
-
 
     private String getMetricsKey(ObjectName objectName, MBeanAttributeInfo attr) {
         // Standard jmx keys. {type, scope, name, keyspace, path etc.}
@@ -159,7 +121,7 @@ public class HornetQMonitorTask implements Callable<HornetQMetrics> {
     }
 
     private boolean isDomainConfigured(ObjectName objectName) {
-        return (mbeanLookup.get(objectName.getDomain()) != null);
+        return (objectName.getDomain().equals(mbeanDomainName));
     }
 
 }

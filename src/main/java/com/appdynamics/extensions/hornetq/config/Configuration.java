@@ -21,7 +21,7 @@ import com.appdynamics.extensions.util.metrics.MetricOverride;
 public class Configuration {
 
     private Server[] servers;
-    private MBeanData[] mbeans;
+    private String mbeanDomainName;
     private MetricOverride[] metricOverrides;
     private String metricPathPrefix;
     private int threadTimeout;
@@ -35,12 +35,12 @@ public class Configuration {
         this.servers = servers;
     }
 
-    public MBeanData[] getMbeans() {
-        return mbeans;
+    public String getMbeanDomainName() {
+        return mbeanDomainName;
     }
 
-    public void setMbeans(MBeanData[] mbeans) {
-        this.mbeans = mbeans;
+    public void setMbeanDomainName(String mbeanDomainName) {
+        this.mbeanDomainName = mbeanDomainName;
     }
 
     public String getMetricPathPrefix() {
@@ -74,4 +74,5 @@ public class Configuration {
     public void setMetricOverrides(MetricOverride[] metricOverrides) {
         this.metricOverrides = metricOverrides;
     }
+
 }
