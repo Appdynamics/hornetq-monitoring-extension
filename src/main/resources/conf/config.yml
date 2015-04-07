@@ -1,4 +1,5 @@
 # List of HornetQ servers
+# HornetQ is monitored using JMX.
 servers:
   - host: "localhost"
     port: 3333
@@ -8,7 +9,6 @@ servers:
 
 # hornetq mbean domain name
 mbeanDomainName: "org.hornetq"
-
 
 # number of concurrent tasks
 numberOfThreads: 10

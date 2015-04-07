@@ -7,7 +7,7 @@ HornetQ is an open source project to build a multi-protocol, embeddable, very hi
 This monitoring extension captures statistics from the HornetQ server and displays them in the AppDynamics Metric Browser.
 
 ## Prerequisites ##
-JMX must be enabled in HornetQ Messaging server for this extension to gather metrics.
+JMX must be enabled in HornetQ Messaging server for this extension to gather metrics. Connect with jconsole to check if JMX is enabled.
 
 ## Installation ##
 1. Run "mvn clean install" and find the HornetQMonitor.zip file in the "target" folder.
@@ -28,6 +28,8 @@ Note : Please make sure to not use tab (\t) while editing yaml files. You may wa
             password: ""
             displayName: "localhost"
 
+        # hornetq mbean domain name
+        mbeanDomainName: "org.hornetq"
 
         # number of concurrent tasks
         numberOfThreads: 10
