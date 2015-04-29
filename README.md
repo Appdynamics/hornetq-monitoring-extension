@@ -91,5 +91,5 @@ Find out more in the [AppDynamics Exchange][].
 
 For any questions or feature request, please contact [AppDynamics Center of Excellence][].
 
-[AppDynamics Exchange]: http://community.appdynamics.com/t5/AppDynamics-eXchange/idb-p/extensions
+[AppDynamics Exchange]: http://community.appdynamics.com/t5/eXchange-Community-AppDynamics/Hornetq-Monitoring-Extension/idi-p/18631
 [AppDynamics Center of Excellence]: mailto:help@appdynamics.com
