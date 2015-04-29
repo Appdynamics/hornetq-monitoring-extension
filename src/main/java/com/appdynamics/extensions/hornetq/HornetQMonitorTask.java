@@ -66,7 +66,7 @@ public class HornetQMonitorTask implements Callable<HornetQMetrics> {
                 }
             }
         } catch (Exception e) {
-            logger.error("Error JMX-ing into the server :: " + hornetQMetrics.getDisplayName() + e);
+            logger.error("Error JMX-ing into the server :: " + hornetQMetrics.getDisplayName(), e);
             hornetQMetrics.getMetrics().put(HornetQMonitorConstants.METRICS_COLLECTION_SUCCESSFUL, HornetQMonitorConstants.ERROR_VALUE);
         } finally {
             jmxConnector.close();
@@ -94,7 +94,7 @@ public class HornetQMonitorTask implements Callable<HornetQMetrics> {
                                 }
                             }
                         } catch (Exception e) {
-                            logger.warn("Error fetching attribute " + attr.getName() + " " + e);
+                            logger.warn("Error fetching attribute " + attr.getName(), e);
                         }
                     }
                 }

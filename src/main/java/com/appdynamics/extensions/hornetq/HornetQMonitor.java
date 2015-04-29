@@ -137,11 +137,11 @@ public class HornetQMonitor extends AManagedMonitor {
                 hornetQMetric = aParallelTask.get(timeout, TimeUnit.SECONDS);
                 allMetrics.add(hornetQMetric);
             } catch (InterruptedException e) {
-                logger.error("Task interrupted." + e);
+                logger.error("Task interrupted. ", e);
             } catch (ExecutionException e) {
-                logger.error("Task execution failed." + e);
+                logger.error("Task execution failed. ", e);
             } catch (TimeoutException e) {
-                logger.error("Task timed out." + e);
+                logger.error("Task timed out. ", e);
             }
         }
         return allMetrics;

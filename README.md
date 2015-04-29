@@ -12,6 +12,9 @@ JMX must be enabled in HornetQ Messaging server for this extension to gather met
 ## Installation ##
 1. Run "mvn clean install" and find the HornetQMonitor.zip file in the "target" folder.
 2. Unzip as "HornetQMonitor" and copy the "HornetQMonitor" directory to `<MACHINE_AGENT_HOME>/monitors`
+3. Configure the extension by following the below section and restart the machine agent.
+
+In the AppDynamics Metric Browser, look for: `Application Infrastructure Performance | <Tier> | Custom Metrics | HornetQ` in case of default metric path.
 
 ## Configuration ##
 Note : Please make sure to not use tab (\t) while editing yaml files. You may want to validate the yaml file using a [yaml validator](http://yamllint.com/)
@@ -66,6 +69,17 @@ Note : Please make sure to not use tab (\t) while editing yaml files. You may wa
      </task-arguments>
     ```
 
+## Metrics ##
+Extension reports metrics exposed by JMX and can be enabled/disabled by configuring metricOverrides property in config.yml
+
+In addition to the above metrics, we also add a metric called "Metrics Collection Successful" with a value 0 when an error occurs and 1 when the metrics collection is successful.
+
+Note : By default, a Machine agent or a AppServer agent can send a fixed number of metrics to the controller. To change this limit, please follow the instructions mentioned [here](http://docs.appdynamics.com/display/PRO14S/Metrics+Limits).
+For eg.  
+```    
+    java -Dappdynamics.agent.maxMetrics=2500 -jar machineagent.jar
+```
+
 ## Contributing ##
 Always feel free to fork and contribute any changes directly here on GitHub.
 
@@ -77,6 +91,5 @@ Find out more in the [AppDynamics Exchange][].
 
 For any questions or feature request, please contact [AppDynamics Center of Excellence][].
 
-[Github]: https://github.com/Appdynamics/cassandra-monitoring-extension
 [AppDynamics Exchange]: http://community.appdynamics.com/t5/AppDynamics-eXchange/idb-p/extensions
 [AppDynamics Center of Excellence]: mailto:help@appdynamics.com
