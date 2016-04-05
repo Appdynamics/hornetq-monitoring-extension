@@ -22,6 +22,7 @@ import com.appdynamics.extensions.util.metrics.Metric;
 import com.appdynamics.extensions.util.metrics.MetricFactory;
 import com.appdynamics.extensions.yml.YmlReader;
 import com.google.common.base.Strings;
+import com.google.common.collect.Maps;
 import com.singularity.ee.agent.systemagent.api.AManagedMonitor;
 import com.singularity.ee.agent.systemagent.api.MetricWriter;
 import com.singularity.ee.agent.systemagent.api.TaskExecutionContext;
@@ -162,8 +163,8 @@ public class HornetQMonitor extends AManagedMonitor {
                 timeRollupType,
                 clusterRollupType
         );
-        //  System.out.println("Sending [" + aggType + METRIC_SEPARATOR + timeRollupType + METRIC_SEPARATOR + clusterRollupType
-        //              + "] metric = " + metricPath + " = " + metricValue);
+          /*System.out.println("Sending [" + aggType + METRIC_SEPARATOR + timeRollupType + METRIC_SEPARATOR + clusterRollupType
+                      + "] metric = " + metricPath + " = " + metricValue);*/
         if (logger.isDebugEnabled()) {
             logger.debug("Sending [" + aggType + METRIC_SEPARATOR + timeRollupType + METRIC_SEPARATOR + clusterRollupType
                     + "] metric = " + metricPath + " = " + metricValue);

@@ -18,6 +18,7 @@ package com.appdynamics.extensions.hornetq.config;
 
 public class Server {
 
+    private String jmxServiceUrl;
     private String host;
     private int port;
     private String username;
@@ -62,5 +63,13 @@ public class Server {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public String getJmxServiceUrl() {
+        return jmxServiceUrl;
+    }
+
+    public void setJmxServiceUrl(String jmxServiceUrl) {
+        this.jmxServiceUrl = jmxServiceUrl;
     }
 }

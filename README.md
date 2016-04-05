@@ -24,9 +24,12 @@ Note : Please make sure to not use tab (\t) while editing yaml files. You may wa
    For eg.
    ```
         # List of HornetQ servers
+        # HornetQ is monitored using JMX.
+        # (host & port) OR jmxServiceUrl required
         servers:
           - host: "localhost"
             port: 3333
+            # jmxServiceUrl: "service:jmx:remoting-jmx://localhost:9999"
             username: ""
             password: ""
             displayName: "localhost"

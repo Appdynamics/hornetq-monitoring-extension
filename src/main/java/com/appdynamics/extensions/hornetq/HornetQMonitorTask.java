@@ -55,7 +55,12 @@ public class HornetQMonitorTask implements Callable<HornetQMetrics> {
         HornetQMetrics hornetQMetrics = new HornetQMetrics();
         hornetQMetrics.setDisplayName(server.getDisplayName());
         try {
-            jmxConnector = new JMXConnectionUtil(new JMXConnectionConfig(server.getHost(), server.getPort(), server.getUsername(), server.getPassword()));
+            if(Strings.isNullOrEmpty(server.getJmxServiceUrl())) {
+                jmxConnector = new JMXConnectionUtil(new JMXConnectionConfig(server.getHost(), server.getPort(), server.getUsername(), server.getPassword()));
+            }
+            else {
+                jmxConnector = new JMXConnectionUtil(new JMXConnectionConfig(server.getJmxServiceUrl(), server.getUsername(), server.getPassword()));
+            }
             JMXConnector connector = jmxConnector.connect();
             if (connector != null) {
                 Set<ObjectInstance> allMbeans = jmxConnector.getAllMBeans();
